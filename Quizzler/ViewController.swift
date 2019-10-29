@@ -13,14 +13,15 @@ class ViewController: UIViewController {
     //Place your instance variables here
     
     let allQuestions = QuestionBank()
-    var pickedAnswer : Bool = false
+    var pickedAnswer : Int = 0
     var questionNumber : Int = 0
-    var score : Int = 0
+    var answers = [Int]()
     
     @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet weak var scoreLabel: UILabel!
-    @IBOutlet var progressBar: UIView!
-    @IBOutlet weak var progressLabel: UILabel!
+    @IBOutlet weak var Option1: UIButton!
+    @IBOutlet weak var Option2: UIButton!
+    @IBOutlet weak var Option3: UIButton!
+    @IBOutlet weak var Option4: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,33 +29,25 @@ class ViewController: UIViewController {
         nextQuestion()
     }
 
-
-    @IBAction func answerPressed(_ sender: AnyObject) {
-        if sender.tag == 1 {
-            pickedAnswer = true
-        } else if sender.tag == 2 {
-            pickedAnswer = false
-        }
-        
-        checkAnswer()
+    @IBAction func answerButtonPressed(_ sender: UIButton) {
+        answers.append(sender.tag)
         
         questionNumber += 1
         
         nextQuestion()
-        
     }
     
-    
     func updateUI() {
-        scoreLabel.text = "Score: \(score)"
-        progressLabel.text = "\(questionNumber+1) / 13"
-        progressBar.frame.size.width = (view.frame.size.width) * CGFloat(questionNumber + 1) / 13
+        Option1.setTitle(allQuestions.list[questionNumber].option1, for: .normal)
+        Option2.setTitle(allQuestions.list[questionNumber].option2, for: .normal)
+        Option3.setTitle(allQuestions.list[questionNumber].option3, for: .normal)
+        Option4.setTitle(allQuestions.list[questionNumber].option4, for: .normal)
     }
     
 
     func nextQuestion() {
         
-        if questionNumber <= 12 {
+        if questionNumber <= 2 {
             questionLabel.text = allQuestions.list[questionNumber].questionText
             updateUI()
         } else {
@@ -70,24 +63,10 @@ class ViewController: UIViewController {
     }
     
     
-    func checkAnswer() {
-        
-        let correctAnswer = allQuestions.list[questionNumber].answer
-        
-        if correctAnswer == pickedAnswer {
-            ProgressHUD.showSuccess("Correct!")
-            score+=1
-        } else {
-            ProgressHUD.showError("Wrong!")
-        }
-        
-    }
-    
-    
     func startOver() {
         questionNumber = 0
-        score = 0
         nextQuestion()
+        answers = [Int]()
     }
     
 
